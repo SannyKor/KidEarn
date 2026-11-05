@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="KidEarn.Domain/KidEarn.Domain.csproj" />
+  <Project Path="KidEarn.Infrastructure/KidEarn.Infrastructure.csproj" />
+  <Project Path="KidEarn.Web/KidEarn.Web.csproj" />
+</Solution>
