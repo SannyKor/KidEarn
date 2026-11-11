@@ -1,10 +1,12 @@
 ﻿using KidEarn.Infrastructure.Data;
 using KidEarn.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KidEarn.Web.Controllers
 {
+    [Authorize] // Забороняє доступ неавторизованим користувачам
     public class DashboardController : Controller
     {
         private readonly KidEarnDbContext _context;

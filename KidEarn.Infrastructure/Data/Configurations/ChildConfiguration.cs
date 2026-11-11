@@ -35,14 +35,15 @@ namespace KidEarn.Infrastructure.Data.Configurations
                 .HasPrecision(18, 2)
                 .HasDefaultValue(0.00m);
 
-            builder.Property(c => c.ParentId)
-                .IsRequired()
-                .HasMaxLength(450); // Стандартна довжина Id для ASP.NET Core Identity
-
             // Зв'язок 1:1 з депозитним рахунком
             builder.HasOne(c => c.DepositAccount)
                 .WithOne(d => d.Child)
                 .HasForeignKey<DepositAccount>(d => d.ChildId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(c => c.Family)
+                .WithMany(f => f.Children)
+                .HasForeignKey(c => c.FamilyId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

@@ -15,6 +15,7 @@ namespace KidEarn.Domain.Entities
         public DateOnly DateReceived { get; set; }
 
         public string? Comment { get; set; }
+        public string? ChildComment { get; set; }
 
         // Foreign Key та навігаційна властивість на дитину
         public int ChildId { get; set; }

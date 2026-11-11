@@ -1,6 +1,8 @@
 using KidEarn.Domain.Interfaces;
 using KidEarn.Infrastructure.Data;
+using KidEarn.Infrastructure.Data.Identity;
 using KidEarn.Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace KidEarn.Web
@@ -18,6 +20,27 @@ namespace KidEarn.Web
                 b => b.MigrationsAssembly("KidEarn.Infrastructure")
             ));
 
+            // Реєстрація ASP.NET Core Identity
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                // Спрощені вимоги до пароля для комфортної локальної розробки
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 4;
+            })
+            .AddEntityFrameworkStores<KidEarnDbContext>()
+            .AddDefaultTokenProviders();
+
+            // Налаштування Cookie аутентифікації
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromDays(14);
+            });
+
             // Реєстрація бізнес-сервісів у DI
             builder.Services.AddScoped<IAllowanceCalculationService, AllowanceCalculationService>();
 
@@ -32,8 +55,10 @@ namespace KidEarn.Web
                 try
                 {
                     var context = services.GetRequiredService<KidEarnDbContext>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var calcService = services.GetRequiredService<IAllowanceCalculationService>();
-                    await DbInitializer.SeedAsync(context, calcService);
+                    await DbInitializer.SeedAsync(context, calcService, roleManager, userManager);
                 }
                 catch (Exception ex)
                 {
@@ -54,6 +79,7 @@ namespace KidEarn.Web
             app.UseStaticFiles();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();

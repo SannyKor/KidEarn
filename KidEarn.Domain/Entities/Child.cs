@@ -21,8 +21,12 @@ namespace KidEarn.Domain.Entities
         // Поточний баланс доступних Nut (основний гаманець)
         public decimal NutBalance { get; set; } = 0.00m;
 
-        // Ідентифікатор батька (для майбутньої прив'язки до Identity/Parent)
-        public string ParentId { get; set; } = string.Empty;
+        // Прив'язка до сім'ї (Multi-Tenant ID)
+        public int FamilyId { get; set; }
+        public Family Family { get; set; } = null!;
+
+        // Власний Identity логін для входу
+        public string? IdentityUserId { get; set; }
 
         // Навігаційні колекції
         public DepositAccount? DepositAccount { get; set; }

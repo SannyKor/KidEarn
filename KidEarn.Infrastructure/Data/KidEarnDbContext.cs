@@ -1,4 +1,6 @@
 ﻿using KidEarn.Domain.Entities;
+using KidEarn.Infrastructure.Data.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,13 +9,14 @@ using System.Text;
 
 namespace KidEarn.Infrastructure.Data
 {
-    public class KidEarnDbContext : DbContext
+    public class KidEarnDbContext : IdentityDbContext<ApplicationUser>
     {
         public KidEarnDbContext(DbContextOptions<KidEarnDbContext> options)
             : base(options)
         {
         }
 
+        public DbSet<Family> Families => Set<Family>();
         public DbSet<Child> Children => Set<Child>();
         public DbSet<Subject> Subjects => Set<Subject>();
         public DbSet<Grade> Grades => Set<Grade>();
@@ -25,9 +28,6 @@ namespace KidEarn.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Сканує поточну збірку (KidEarn.Infrastructure) і реєструє всі класи, 
-            // що реалізують IEntityTypeConfiguration<T>
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
