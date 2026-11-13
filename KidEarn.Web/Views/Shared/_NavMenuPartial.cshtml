@@ -1,0 +1,15 @@
+﻿<ul class="navbar-nav me-auto">
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Кабінет</a>
+        </li>
+
+        @if (User.IsInRole("Parent"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark fw-semibold" asp-controller="Family" asp-action="Index">Моя сім'я</a>
+            </li>
+        }
+    }
+</ul>

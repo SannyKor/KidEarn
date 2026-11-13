@@ -1,0 +1,93 @@
+﻿@model KidEarn.Web.ViewModels.FamilyIndexViewModel
+
+@{
+    ViewData["Title"] = "Керування сім'єю";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">@Model.FamilyName 👨‍👩‍👧‍👦</h2>
+            <p class="text-muted mb-0">Адміністратори сім'ї та облікові записи дітей</p>
+        </div>
+        <div>
+            <a asp-action="CreateChild" class="btn btn-primary">
+                + Додати дитину
+            </a>
+        </div>
+    </div>
+
+    <!-- Блок батьків (адміністраторів) -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold">Батьки (Адміністратори)</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                @foreach (var parent in Model.Parents)
+                {
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold">@parent.FullName</div>
+                                <div class="text-muted small">📱 @parent.PhoneNumber</div>
+                            </div>
+                            <span class="badge bg-dark">Адміністратор</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Блок дітей -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold">Діти</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ім'я та Прізвище</th>
+                            <th>Телефон (Логін)</th>
+                            <th>Денна ставка</th>
+                            <th>Коефіцієнт</th>
+                            <th>Баланс</th>
+                            <th class="text-end">Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Children.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    У цій сім'ї ще не додано жодної дитини. Натисніть «+ Додати дитину».
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var child in Model.Children)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@child.FullName</td>
+                                    <td>@child.PhoneNumber</td>
+                                    <td>@child.DailyBaseAllowance.ToString("F2") Nut</td>
+                                    <td><span class="badge bg-primary">x@(child.CurrentMultiplier.ToString("F2"))</span></td>
+                                    <td class="text-success fw-bold">@child.NutBalance.ToString("F2") Nut</td>
+                                    <td class="text-end">
+                                        <a asp-controller="Dashboard" asp-action="Index" asp-route-id="@child.ChildId" class="btn btn-sm btn-outline-secondary">
+                                            Кабінет
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
